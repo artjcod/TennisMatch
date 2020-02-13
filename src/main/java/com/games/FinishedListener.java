@@ -8,6 +8,7 @@ import java.util.Observer;
  * wants to be informed of finished games or sets,etc...
  *
  * @author snaceur
+ * @see java.util.Observer
  */
 public interface FinishedListener extends Observer {
 }

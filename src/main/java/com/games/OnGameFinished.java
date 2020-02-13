@@ -2,6 +2,13 @@ package com.games;
 
 import java.util.Observable;
 
+/**
+ * This class is the listener or the observer that will called once
+ * the event (finish) has occurred.
+ * @author snaceur
+ * @see com.games.FinishedListener
+ */
+
 public class OnGameFinished implements FinishedListener {
 	@Override
 	public void update(Observable o, Object arg) {

@@ -6,6 +6,15 @@ import lombok.EqualsAndHashCode;
 import java.util.LinkedList;
 import java.util.Observable;
 
+/**
+ * This class is observed by the listener OnSetFinished in order to notify the Score board for
+ * set score update.
+ * This class is subject to clone  x.clone()!=x is true whereas x.equals(x) is not.
+ * @author snaceur
+ * @see java.util.Observable
+ * @see java.lang.Cloneable
+ * @see lombok.Lombok
+ */
 
 @EqualsAndHashCode(exclude = {"relatedGames","currentGame","relatedScoreBoard"}, callSuper = false)
 @Data
@@ -137,13 +146,5 @@ public class TennisSet extends Observable implements Cloneable {
 	public void closeSet() {
 		setChanged();
 		notifyObservers();
-	}
-
-	public void setPlayer1Score(int player1Score) {
-		this.player1Score = player1Score;
-	}
-
-	public void setPlayer2Score(int player2Score) {
-		this.player2Score = player2Score;
 	}
 }

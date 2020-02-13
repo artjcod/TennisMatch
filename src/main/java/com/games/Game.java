@@ -7,6 +7,15 @@ import lombok.Getter;
 
 import java.util.Observable;
 
+/**
+ * This class represents a tennis game (points) .
+ * @author snaceur
+ * @see java.lang.Cloneable
+ * @see java.util.Observable
+ * @see lombok.Lombok
+ *
+ */
+
 
 @EqualsAndHashCode(exclude = {"relatedSet"}, callSuper = false)
 @Data

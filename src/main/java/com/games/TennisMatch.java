@@ -8,6 +8,14 @@ import java.util.Observable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class is subject to Finished listener and considered
+ * as an Observer to the score board.
+ * @author snaceur
+ * @see com.games.FinishedListener
+ * @see lombok.Lombok
+ */
+
 @EqualsAndHashCode(exclude = {"scoreBoard"}, callSuper = false)
 @Data
 public class TennisMatch implements FinishedListener {
