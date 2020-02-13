@@ -1,5 +1,8 @@
 package com.games;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Observable;
 
 /**
@@ -10,6 +13,9 @@ import java.util.Observable;
  */
 
 public class OnGameFinished implements FinishedListener {
+
+	private static final Logger logger = LogManager.getLogger(OnGameFinished.class);
+
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Game) {
@@ -20,7 +26,7 @@ public class OnGameFinished implements FinishedListener {
 			} else {
 				relatedSet.player2Scores();
 			}
-			System.out.println(game.getGameWinner()+" wins the game!");
+			logger.info(game.getGameWinner()+" wins the game!");
 			if (!relatedSet.isFinishedSet()) {
 				relatedSet.startNewGame();
 			}
