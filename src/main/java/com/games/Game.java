@@ -2,15 +2,12 @@ package com.games;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Generated;
-import lombok.Getter;
 
 import java.util.Observable;
 
 /**
  * This class represents a tennis game (points) .
  * @author snaceur
- * @see java.lang.Cloneable
  * @see java.util.Observable
  * @see lombok.Lombok
  *
@@ -19,7 +16,7 @@ import java.util.Observable;
 
 @EqualsAndHashCode(exclude = {"relatedSet"}, callSuper = false)
 @Data
-public class Game extends Observable implements Cloneable {
+public class Game extends Observable {
 
     private TennisSet relatedSet;
     private String player1Name;
@@ -121,17 +118,5 @@ public class Game extends Observable implements Cloneable {
     public void finishTheGame() {
         setChanged();
         notifyObservers();
-    }
-
-    @Override
-    public Game clone() {
-        try {
-            Game clonedGame = (Game) super.clone();
-            clonedGame.setPlayer1Score(0);
-            clonedGame.setPlayer2Score(0);
-            return clonedGame;
-        } catch (CloneNotSupportedException ex) {
-            throw new UnsupportedOperationException("Invalid Clone Operation!");
-        }
     }
 }

@@ -326,27 +326,4 @@ public class GameTest {
         assertEquals(game.playerHaveHighestScore(), player2Name);
         assertThat(outContent.toString(), containsString(player2Name));
     }
-
-    @Test
-    public void testClone() {
-        game.player1Scores();
-        game.player1Scores();
-        game.player2Scores();
-        Game newGame = game.clone();
-        assertEquals(game.getPlayer1Name(), newGame.getPlayer1Name());
-        assertEquals(game.getPlayer2Name(), newGame.getPlayer2Name());
-        assertNotSame(game, newGame);
-        assertEquals(newGame.getPlayer1Score(), 0);
-        assertEquals(newGame.getPlayer2Score(), 0);
-        assertFalse(newGame.isFinishedGame());
-        assertFalse(newGame.hasAdvantage());
-        assertEquals(newGame.getGameWinner(), "No Winner");
-    }
-
-    @Test(expected = UnsupportedOperationException.class)
-    public void throwUnsupportedOperationExceptionClone(){
-        game.clone();
-        throw new UnsupportedOperationException();
-    }
-
 }
