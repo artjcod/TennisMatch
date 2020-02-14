@@ -2,6 +2,7 @@ package com.games;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Observable;
  * @see lombok.Lombok
  */
 @EqualsAndHashCode(exclude = {"currentSet","previousSets"}, callSuper = false)
+@ToString(exclude = {"currentSet","previousSets"})
 @Data
 public class ScoreBoard extends Observable {
 

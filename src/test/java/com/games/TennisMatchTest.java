@@ -2,10 +2,15 @@ package com.games;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
+
+
 
 public class TennisMatchTest {
 
@@ -51,23 +56,34 @@ public class TennisMatchTest {
 	}
 
 	@Test
-	public void matchISFinishedPlayer1Wins() {
+	public void matchISFinishedPlayer1Wins_3Sets_Love() {
 		ScoreBoard scoreBoard = match.getScoreBoard();
+		IntStream.rangeClosed(1,3).forEach(w-> {
+			TennisSet tennisSet = new TennisSet(scoreBoard, player1Name, player2Name);
+			tennisSet.setPlayer1Score(6);
+			tennisSet.setPlayer2Score(3);
+			scoreBoard.getPreviousSets().add(tennisSet);
+		});
 		IntStream.rangeClosed(1, 3).forEach(i -> scoreBoard.player1SetScores());
 		assertThat(match.isFinished()).isTrue();
 		assertThat(match.getLeader()).isEqualTo(player1Name);
 	}
-
 	@Test
-	public void mathIsFinishedPlayer2Wins() {
+	public void mathIsFinishedPlayer2Wins_3Sets_Love() {
 		ScoreBoard scoreBoard = match.getScoreBoard();
+		IntStream.rangeClosed(1,3).forEach(w-> {
+			TennisSet tennisSet = new TennisSet(scoreBoard, player1Name, player2Name);
+			tennisSet.setPlayer1Score(5);
+			tennisSet.setPlayer2Score(7);
+			scoreBoard.getPreviousSets().add(tennisSet);
+		});
 		IntStream.rangeClosed(1, 3).forEach(i -> scoreBoard.player2SetScores());
 		assertThat(match.isFinished()).isTrue();
 		assertThat(match.getLeader()).isEqualTo(player2Name);
 	}
 
 	@Test
-	public void mathNotFinishedScore2Sets_2Sets() {
+	public void mathNotFinishedScore2SetsAll() {
 		ScoreBoard scoreBoard = match.getScoreBoard();
 		IntStream.rangeClosed(1, 2).forEach(i -> scoreBoard.player1SetScores());
 		IntStream.rangeClosed(1, 2).forEach(i -> scoreBoard.player2SetScores());

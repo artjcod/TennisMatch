@@ -2,9 +2,11 @@ package com.games;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -17,6 +19,7 @@ import java.util.stream.Stream;
  */
 
 @EqualsAndHashCode(exclude = {"scoreBoard"}, callSuper = false)
+@ToString(exclude = {"scoreBoard"})
 @Data
 public class TennisMatch implements FinishedListener {
 
@@ -110,20 +113,25 @@ public class TennisMatch implements FinishedListener {
 
     public void createMatchReport(ScoreBoard scoreBoard) {
         List<TennisSet> matchSets = scoreBoard.getPreviousSets();
-        Map<Boolean, List<TennisSet>> isTieBreakSets = matchSets.stream().collect(Collectors.partitioningBy(set -> set.isTieBreakActive()));
-		List<Object[]> noTieBreakSets = isTieBreakSets.get(false).stream().
-				map(val -> Stream.of(val.getPlayer1Score(), val.getPlayer2Score()).toArray()).collect(Collectors.toList());
-		List<Object[]> tieBreakSets = isTieBreakSets.get(true).stream().
-				map(val -> Stream.of(val.getPlayer1Score() +
-								"(" + val.getPlayer1TieBreakScore() + ")",
-						val.getPlayer2Score() + "(" + val.getPlayer2TieBreakScore() + ")").toArray()).collect(Collectors.toList());
-		Stream<Object[]> mergedSets = Stream.concat(noTieBreakSets.stream(), tieBreakSets.stream());
-		mergedSets.forEach(score->{
-			score.getClass();
-		});
-
-
-
-
-	}
+        List<List<String>> rows = new ArrayList<>();
+        List<String> headers = Stream.of("Player Name").collect(Collectors.toList());
+        IntStream.rangeClosed(1, matchSets.size()).forEach(i -> headers.add("Set " + i));
+        rows.add(headers);
+        List<String> player1Scores = matchSets.parallelStream().map(set -> set.isTieBreakActive() ? set.getPlayer1Score() +
+                "(" + set.getPlayer1TieBreakScore() + ")" : String.valueOf(set.getPlayer1Score())).collect(Collectors.toList());
+        List<String> player2Scores = matchSets.parallelStream().map(set ->
+                set.isTieBreakActive() ? set.getPlayer2Score() + "(" + set.getPlayer2TieBreakScore() + ")" :
+                        String.valueOf(set.getPlayer2Score())
+        ).collect(Collectors.toList());
+        player1Scores.add(0, player1Name);
+        player2Scores.add(0, player2Name);
+        rows.add(player1Scores);
+        rows.add(player2Scores);
+        int[] lineSizes = new int[rows.get(0).size()];
+        rows.forEach(row -> IntStream.range(0, row.size()).forEach(i -> lineSizes[i] = Math.max(lineSizes[i], row.get(i).length())));
+        String wordSpacing = Arrays.stream(lineSizes).mapToObj(lineSize -> "%-".concat(String.valueOf(lineSize + 2)).concat("s")
+        ).collect(Collectors.joining());
+        String lineFormat = rows.stream().map(row -> String.format(wordSpacing, row.toArray()) + "\n").collect(Collectors.joining());
+         System.out.println(lineFormat);
+    }
 }
