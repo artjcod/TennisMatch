@@ -26,7 +26,8 @@ public class OnGameFinished implements FinishedListener {
 			} else {
 				relatedSet.player2Scores();
 			}
-			logger.info(game.getGameWinner()+" wins the game!");
+			logger.info("{} wins the game!",game.getGameWinner());
+
 			if (!relatedSet.isFinishedSet()) {
 				relatedSet.startNewGame();
 			}

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -21,7 +22,7 @@ import java.util.Observable;
 @Data
 public class TennisSet extends Observable{
 
-    private LinkedList<Game> relatedGames = new LinkedList<>();
+    private List<Game> relatedGames = new LinkedList<>();
 
     private Game currentGame;
 
@@ -45,7 +46,7 @@ public class TennisSet extends Observable{
         this.addObserver(new OnSetFinished());
     }
 
-    public LinkedList<Game> getRelatedGames() {
+    public List<Game> getRelatedGames() {
         return relatedGames;
     }
 

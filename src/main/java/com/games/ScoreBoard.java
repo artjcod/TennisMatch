@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 
 
@@ -17,9 +18,10 @@ import java.util.Observable;
 @Data
 public class ScoreBoard extends Observable {
 
-	private TennisSet currentSet; // games;
-	private LinkedList<TennisSet> previousSets = new LinkedList<>(); // previous sets;
-	private String player1Name, player2Name;
+	private TennisSet currentSet;
+	private List<TennisSet> previousSets = new LinkedList<>();
+	private String player1Name;
+	private String player2Name;
 
 	// Set Scores
 	private int player1SetScore = 0;
