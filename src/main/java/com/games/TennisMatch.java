@@ -123,7 +123,7 @@ public class TennisMatch implements FinishedListener {
         rows.forEach(row -> IntStream.range(0, row.size()).forEach(i -> lineSizes[i] = Math.max(lineSizes[i], row.get(i).length())));
         String wordSpacing = Arrays.stream(lineSizes).mapToObj(lineSize -> "%-".concat(String.valueOf(lineSize + 2)).concat("s")
         ).collect(Collectors.joining());
-        String matchReport = rows.stream().map(row -> String.format(wordSpacing, row.toArray()) + "\n").collect(Collectors.joining());
-        logger.info("\n" + matchReport);
+        String matchReport = rows.stream().map(row -> String.format(wordSpacing.concat("\n"), row.toArray()) ).collect(Collectors.joining());
+        logger.info("\n{}" ,matchReport);
     }
 }
