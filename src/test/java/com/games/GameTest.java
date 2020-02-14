@@ -57,14 +57,14 @@ public class GameTest {
     public void player1ScoredTwiceGameScoreUpdate() {
         game.player1Scores();
         game.player1Scores();
-        assertThat(game.getPlayer1Score(), equalTo(2));
+        assertThat(game.getPlayer1Points(), equalTo(2));
     }
 
     @Test
     public void player2ScoredTwiceGameScoreUpdated() {
         game.player2Scores();
         game.player2Scores();
-        assertThat(game.getPlayer2Score(), equalTo(2));
+        assertThat(game.getPlayer2Points(), equalTo(2));
     }
 
     @Test

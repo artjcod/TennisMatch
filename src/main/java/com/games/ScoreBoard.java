@@ -26,8 +26,8 @@ public class ScoreBoard extends Observable {
 	private String player2Name;
 
 	// Set Scores
-	private int player1SetScore = 0;
-	private int player2SetScore = 0;
+	private int player1WonSets = 0;
+	private int player2WonSets = 0;
 
 	public ScoreBoard(String player1Name, String player2Name) {
 		initBoard(player1Name, player2Name);
@@ -44,32 +44,53 @@ public class ScoreBoard extends Observable {
 
 	public void closeCurrentSet() {
 		previousSets.add(currentSet);
-		String setWinner = currentSet.getSetWinner();
-		if (setWinner.equals(player1Name)) {
-			player1SetScores();
+		String currentSetWinner = currentSet.getSetWinner();
+		if (currentSetWinner.equals(player1Name)) {
+			player1WinsCurrentSet();
 		} else {
-			player2SetScores();
+			player2WinsCurrentSet();
 		}
-		startNextSet();
+		if(!isFinishedMatch()) {
+			startNextSet();
+		}
 	}
 
-	public void player1SetScores() {
-		player1SetScore++;
-		if(player1SetScore == 3) {
+	public void player1WinsCurrentSet() {
+		player1WonSets++;
+		if(player1WonSets == 3) {
 			setChanged();
 			notifyObservers();
 		}
 	}
-	public void player2SetScores() {
-		player2SetScore++;
-		if(player2SetScore == 3) {
+	public void player2WinsCurrentSet() {
+		player2WonSets++;
+		if(player2WonSets == 3) {
 			setChanged();
 			notifyObservers();
 		}
 	}
+
+	public void player1WinsOnePoint(){
+		currentSet.player1WinsOnePoint();
+	}
+
+	public void player2WinsOnePoint(){
+		currentSet.player2WinsOnePoint();
+	}
+
 	public boolean isFinishedMatch() {
-		if (player1SetScore == 3) {
+		if (player1WonSets == 3) {
 			return true;
-		} else return player2SetScore == 3;
+		} else return player2WonSets == 3;
+	}
+
+	public String getLeader(){
+		if (this.getPlayer1WonSets() > this.getPlayer2WonSets()) {
+			return player1Name;
+		} else if (this.getPlayer2WonSets() > this.getPlayer1WonSets()) {
+			return player2Name;
+		} else {
+			return "No Leader!";
+		}
 	}
 }

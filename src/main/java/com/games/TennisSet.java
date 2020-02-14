@@ -22,7 +22,7 @@ import java.util.Observable;
 @EqualsAndHashCode(exclude = {"relatedGames", "currentGame", "relatedScoreBoard"}, callSuper = false)
 @ToString(exclude = {"relatedGames", "currentGame", "relatedScoreBoard"})
 @Data
-public class TennisSet extends Observable{
+public class TennisSet extends Observable {
 
     private List<Game> relatedGames = new LinkedList<>();
 
@@ -30,13 +30,13 @@ public class TennisSet extends Observable{
 
     private ScoreBoard relatedScoreBoard;
 
-    private int player1Score = 0;
-    private int player2Score = 0;
+    private int player1WonGames = 0;
+    private int player2WonGames = 0;
 
     private boolean isTieBreakActive;
 
-    private int player1TieBreakScore = 0;
-    private int player2TieBreakScore = 0;
+    private int player1TieBreakPoints = 0;
+    private int player2TieBreakPoints = 0;
 
     public TennisSet(ScoreBoard relatedScoreBoard, String... players) {
         if (players.length < 2) {
@@ -67,14 +67,32 @@ public class TennisSet extends Observable{
         return relatedGames.get(id);
     }
 
-    public void player1Scores() {
+    public void player1WinsOnePoint() {
         if (isTieBreakActive) {
-            player1TieBreakScore++;
-        } else {
-            player1Score++;
-            if (isTieBreak()) {
-                isTieBreakActive = true;
+            player1TieBreakPoints++;
+            if (isFinishedSet()) {
+                closeSet();
             }
+        } else {
+            currentGame.player1Scores();
+        }
+    }
+
+    public void player2WinsOnePoint() {
+        if (isTieBreakActive) {
+            player2TieBreakPoints++;
+            if (isFinishedSet()) {
+                closeSet();
+            }
+        } else {
+            currentGame.player2Scores();
+        }
+    }
+
+    public void player1WinsCurrentGame() {
+        player1WonGames++;
+        if (isTieBreak()) {
+            isTieBreakActive = true;
         }
         if (isFinishedSet()) {
             closeSet();
@@ -84,9 +102,16 @@ public class TennisSet extends Observable{
     public String getTieBreakScore() {
         if (isTieBreakActive) {
             StringBuilder builder = new StringBuilder();
-            builder.append(player1Score).append("-").append(player1Score);
-            builder.append("(");
-            builder.append(player1TieBreakScore).append("-").append(player2TieBreakScore);
+            String leader = relatedScoreBoard.getLeader();
+            if (leader.equals(currentGame.getPlayer1Name()) || leader.equals("No Leader!")) {
+                builder.append(player1WonGames).append("-").append(player2WonGames);
+                builder.append("(");
+                builder.append(player1TieBreakPoints).append("-").append(player2TieBreakPoints);
+            } else {
+                builder.append(player2WonGames).append("-").append(player1WonGames);
+                builder.append("(");
+                builder.append(player2TieBreakPoints).append("-").append(player1TieBreakPoints);
+            }
             builder.append(")");
             return builder.toString();
         } else {
@@ -95,32 +120,37 @@ public class TennisSet extends Observable{
     }
 
     public String getSetWinner() {
-        if ((isTieBreakActive && player1TieBreakScore >= 7 && player1TieBreakScore >= player2TieBreakScore + 2)
-                || (player1Score >= 6 && player1Score >= player2Score + 2)) {
-            return this.currentGame.getPlayer1Name();
-        } else if ((isTieBreakActive && player2TieBreakScore >= 7 && player2TieBreakScore >= player1TieBreakScore + 2)
-                || (player2Score >= 6 && player2Score >= player1Score + 2)) {
+        if ((isTieBreakActive && player2TieBreakPoints >= 7 && player2TieBreakPoints >= player1TieBreakPoints + 2)
+                || (player2WonGames >= 6 && player2WonGames >= player1WonGames + 2)) {
             return this.currentGame.getPlayer2Name();
+        } else if ((isTieBreakActive && player1TieBreakPoints >= 7 && player1TieBreakPoints >= player2TieBreakPoints + 2)
+                || (player1WonGames >= 6 && player1WonGames >= player2WonGames + 2)) {
+            return this.currentGame.getPlayer1Name();
         } else {
             return "No Winner!";
         }
     }
 
-    public String getSetScoreByLeader() {
+    public String getCurrentSetScoreByLeader() {
         if (isTieBreakActive) {
             return getTieBreakScore();
         } else {
             StringBuilder builder = new StringBuilder();
-            builder.append(player1Score).append("-").append(player2Score);
+            String leader = relatedScoreBoard.getLeader();
+            if (leader.equals(currentGame.getPlayer1Name()) || leader.equals("No Leader!")) {
+                builder.append(player1WonGames).append("-").append(player2WonGames);
+            } else {
+                builder.append(player2WonGames).append("-").append(player1WonGames);
+            }
             return builder.toString();
         }
     }
 
-    public void player2Scores() {
+    public void player2WinsCurrentGame() {
         if (isTieBreakActive) {
-            player2TieBreakScore++;
+            player2TieBreakPoints++;
         } else {
-            player2Score++;
+            player2WonGames++;
             if (isTieBreak()) {
                 isTieBreakActive = true;
             }
@@ -132,16 +162,16 @@ public class TennisSet extends Observable{
 
     public boolean isFinishedSet() {
         if (isTieBreakActive) {
-            return ((player1TieBreakScore >= 7 && player1TieBreakScore >= player2TieBreakScore + 2)
-                    || (player2TieBreakScore >= 7 && player2TieBreakScore >= player1TieBreakScore + 2));
+            return ((player1TieBreakPoints >= 7 && player1TieBreakPoints >= player2TieBreakPoints + 2)
+                    || (player2TieBreakPoints >= 7 && player2TieBreakPoints >= player1TieBreakPoints + 2));
         } else {
-            return ((player1Score >= 6 && player1Score >= player2Score + 2)
-                    || (player2Score >= 6 && player2Score >= player1Score + 2));
+            return ((player1WonGames >= 6 && player1WonGames >= player2WonGames + 2)
+                    || (player2WonGames >= 6 && player2WonGames >= player1WonGames + 2));
         }
     }
 
     private boolean isTieBreak() {
-        return (player1Score == 6 && player2Score == 6);
+        return (player1WonGames == 6 && player2WonGames == 6);
     }
 
     public boolean isTieBreakActive() {

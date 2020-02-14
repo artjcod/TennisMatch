@@ -22,8 +22,8 @@ public class Game extends Observable {
     private String player1Name;
     private String player2Name;
 
-    private int player1Score = 0;
-    private int player2Score = 0;
+    private int player1Points = 0;
+    private int player2Points = 0;
 
     public Game(String player1Name, String player2Name, TennisSet relatedSet) {
         this.player1Name = player1Name;
@@ -33,31 +33,31 @@ public class Game extends Observable {
     }
 
     public void player1Scores() {
-        player1Score++;
+        player1Points++;
         if (isFinishedGame()) {
             finishTheGame();
         }
     }
 
     public void player2Scores() {
-        player2Score++;
+        player2Points++;
         if (isFinishedGame()) {
             finishTheGame();
         }
     }
 
     public boolean isFinishedGame() {
-        return (player1Score >= 4 && (player1Score >= player2Score + 2))
-                || (player2Score >= 4 && (player2Score >= player1Score + 2));
+        return (player1Points >= 4 && (player1Points >= player2Points + 2))
+                || (player2Points >= 4 && (player2Points >= player1Points + 2));
     }
 
     public boolean isDeuce() {
-        return player1Score >= 3 && (player1Score == player2Score);
+        return player1Points >= 3 && (player1Points == player2Points);
     }
 
     public boolean hasAdvantage() {
-        if (player1Score >= 4 || player2Score >= 4) {
-            int diff = player1Score - player2Score;
+        if (player1Points >= 4 || player2Points >= 4) {
+            int diff = player1Points - player2Points;
             return Math.abs(diff) == 1;
         } else {
             return false;
@@ -68,7 +68,7 @@ public class Game extends Observable {
 
         if (!isFinishedGame()) {
             return "No Winner";
-        } else if (player1Score > player2Score) {
+        } else if (player1Points > player2Points) {
             return player1Name;
         } else {
             return player2Name;
@@ -82,15 +82,15 @@ public class Game extends Observable {
             return "ADV for " + playerHaveHighestScore();
         } else if (isDeuce()) {
             return "DEUCE";
-        } else if (player1Score == player2Score) {
-            return toAnnouncedScore(player1Score) + " ALL";
+        } else if (player1Points == player2Points) {
+            return toAnnouncedScore(player1Points) + " ALL";
         } else {
-            return toAnnouncedScore(player1Score) + "-" + toAnnouncedScore(player2Score);
+            return toAnnouncedScore(player1Points) + "-" + toAnnouncedScore(player2Points);
         }
     }
 
     public String playerHaveHighestScore() {
-        return (player1Score > player2Score) ? player1Name : player2Name;
+        return (player1Points > player2Points) ? player1Name : player2Name;
     }
 
     public String toAnnouncedScore(int score) {

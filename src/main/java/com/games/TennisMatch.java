@@ -3,6 +3,8 @@ package com.games;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import java.util.stream.Stream;
 @ToString(exclude = {"scoreBoard"})
 @Data
 public class TennisMatch implements FinishedListener {
+    private static final Logger logger = LogManager.getLogger(TennisMatch.class);
 
     private ScoreBoard scoreBoard;
     private String player1Name;
@@ -40,13 +43,7 @@ public class TennisMatch implements FinishedListener {
     }
 
     public String getLeader() {
-        if (scoreBoard.getPlayer1SetScore() > scoreBoard.getPlayer2SetScore()) {
-            return player1Name;
-        } else if (scoreBoard.getPlayer2SetScore() > scoreBoard.getPlayer1SetScore()) {
-            return player2Name;
-        } else {
-            return "No Leader!";
-        }
+      return scoreBoard.getLeader();
     }
 
     public String getFinalScore() {
@@ -56,14 +53,14 @@ public class TennisMatch implements FinishedListener {
                 builder.append(player1Name).append(" defeated ");
                 builder.append(player2Name);
                 builder.append(" ");
-                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getSetScoreByLeader)
+                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getCurrentSetScoreByLeader)
                         .collect(Collectors.joining(","));
                 builder.append(score);
             } else {
                 builder.append(player2Name).append(" defeated ");
                 builder.append(player1Name);
                 builder.append(" ");
-                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getSetScoreByLeader)
+                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getCurrentSetScoreByLeader)
                         .collect(Collectors.joining(","));
                 builder.append(score);
             }
@@ -74,30 +71,25 @@ public class TennisMatch implements FinishedListener {
 
     public String getLiveScore() {
         StringBuilder builder = new StringBuilder(player1Name);
-        builder.append(":").append(scoreBoard.getPlayer1SetScore());
+        builder.append(":").append(scoreBoard.getPlayer1WonSets());
         builder.append(" Sets").append(",").append(player2Name).append(":");
-        builder.append(scoreBoard.getPlayer2SetScore()).append(" Sets");
+        builder.append(scoreBoard.getPlayer2WonSets()).append(" Sets");
         return builder.toString();
     }
 
     public void player1Scores() {
-        TennisSet currentSet = scoreBoard.getCurrentSet();
-        if (currentSet.isTieBreakActive()) {
-            currentSet.player1Scores();
+        if (isFinished()) {
+            throw new IllegalStateException("The match is finished!");
         } else {
-            Game currentGame = currentSet.getCurrentGame();
-            currentGame.player1Scores();
+            scoreBoard.player1WinsOnePoint();
         }
-
     }
 
     public void player2Scores() {
-        TennisSet currentSet = scoreBoard.getCurrentSet();
-        if (currentSet.isTieBreakActive()) {
-            currentSet.player2Scores();
+        if (isFinished()) {
+            throw new IllegalStateException("The match is finished!");
         } else {
-            Game currentGame = currentSet.getCurrentGame();
-            currentGame.player2Scores();
+            scoreBoard.player2WinsOnePoint();
         }
     }
 
@@ -105,23 +97,23 @@ public class TennisMatch implements FinishedListener {
     public void update(Observable o, Object arg) {
         if (o instanceof ScoreBoard) {
             this.finished = true;
-            createMatchReport(scoreBoard);
+            generateMatchReport(scoreBoard);
         } else {
             throw new IllegalArgumentException("Invalid object type received!");
         }
     }
 
-    public void createMatchReport(ScoreBoard scoreBoard) {
+    public void generateMatchReport(ScoreBoard scoreBoard) {
         List<TennisSet> matchSets = scoreBoard.getPreviousSets();
         List<List<String>> rows = new ArrayList<>();
         List<String> headers = Stream.of("Player Name").collect(Collectors.toList());
         IntStream.rangeClosed(1, matchSets.size()).forEach(i -> headers.add("Set " + i));
         rows.add(headers);
-        List<String> player1Scores = matchSets.parallelStream().map(set -> set.isTieBreakActive() ? set.getPlayer1Score() +
-                "(" + set.getPlayer1TieBreakScore() + ")" : String.valueOf(set.getPlayer1Score())).collect(Collectors.toList());
+        List<String> player1Scores = matchSets.parallelStream().map(set -> set.isTieBreakActive() ? set.getPlayer1WonGames() +
+                "(" + set.getPlayer1TieBreakPoints() + ")" : String.valueOf(set.getPlayer1WonGames())).collect(Collectors.toList());
         List<String> player2Scores = matchSets.parallelStream().map(set ->
-                set.isTieBreakActive() ? set.getPlayer2Score() + "(" + set.getPlayer2TieBreakScore() + ")" :
-                        String.valueOf(set.getPlayer2Score())
+                set.isTieBreakActive() ? set.getPlayer2WonGames() + "(" + set.getPlayer2TieBreakPoints() + ")" :
+                        String.valueOf(set.getPlayer2WonGames())
         ).collect(Collectors.toList());
         player1Scores.add(0, player1Name);
         player2Scores.add(0, player2Name);
@@ -131,7 +123,7 @@ public class TennisMatch implements FinishedListener {
         rows.forEach(row -> IntStream.range(0, row.size()).forEach(i -> lineSizes[i] = Math.max(lineSizes[i], row.get(i).length())));
         String wordSpacing = Arrays.stream(lineSizes).mapToObj(lineSize -> "%-".concat(String.valueOf(lineSize + 2)).concat("s")
         ).collect(Collectors.joining());
-        String lineFormat = rows.stream().map(row -> String.format(wordSpacing, row.toArray()) + "\n").collect(Collectors.joining());
-         System.out.println(lineFormat);
+        String matchReport = rows.stream().map(row -> String.format(wordSpacing, row.toArray()) + "\n").collect(Collectors.joining());
+        logger.info("\n" + matchReport);
     }
 }

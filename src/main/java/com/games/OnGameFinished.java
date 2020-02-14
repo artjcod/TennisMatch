@@ -22,9 +22,9 @@ public class OnGameFinished implements FinishedListener {
 			Game game = (Game) o;
 			TennisSet relatedSet = game.getRelatedSet();
 			if (game.getGameWinner().equals(game.getPlayer1Name())) {
-				relatedSet.player1Scores();
+				relatedSet.player1WinsCurrentGame();
 			} else {
-				relatedSet.player2Scores();
+				relatedSet.player2WinsCurrentGame();
 			}
 			logger.info("{} wins the game!",game.getGameWinner());
 

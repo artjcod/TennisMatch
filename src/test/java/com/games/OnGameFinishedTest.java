@@ -27,8 +27,8 @@ public class OnGameFinishedTest {
         currentGame.player1Scores();//15
         currentGame.player2Scores();//40
         currentGame.player2Scores(); //WIN
-        assertEquals(currentSet.getPlayer1Score(), 0);
-        assertEquals(currentSet.getPlayer2Score(), 1);
+        assertEquals(currentSet.getPlayer1WonGames(), 0);
+        assertEquals(currentSet.getPlayer2WonGames(), 1);
         assertEquals(currentGame.getGameWinner(), player2Name);
     }
 
@@ -41,8 +41,8 @@ public class OnGameFinishedTest {
         currentGame.player2Scores();//40
         currentGame.player2Scores(); //WIN
 
-        assertEquals(currentSet.getPlayer1Score(), 0);
-        assertEquals(currentSet.getPlayer2Score(), 1);
+        assertEquals(currentSet.getPlayer1WonGames(), 0);
+        assertEquals(currentSet.getPlayer2WonGames(), 1);
         assertEquals(currentGame.getGameWinner(), player2Name);
 
         // 2nd game
@@ -64,8 +64,8 @@ public class OnGameFinishedTest {
         currentGame.player2Scores();//40
         currentGame.player2Scores(); //WIN
 
-        assertEquals(currentSet.getPlayer1Score(), 1);
-        assertEquals(currentSet.getPlayer2Score(), 2);
+        assertEquals(currentSet.getPlayer1WonGames(), 1);
+        assertEquals(currentSet.getPlayer2WonGames(), 2);
     }
 
 	@Test(expected = IllegalArgumentException.class)
