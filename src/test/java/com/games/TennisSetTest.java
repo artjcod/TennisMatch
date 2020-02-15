@@ -43,7 +43,7 @@ public class TennisSetTest {
     }
 
     @Test
-    public void testTennisSetCreation() {
+    public void tennisSetCreatedWithDefaultValues() {
         TennisSet tennisSet = scoreBoard.getCurrentSet();
         assertThat(tennisSet.getCurrentGame()).isNotNull();
         assertThat(tennisSet.getRelatedGames()).hasOnlyElementsOfType(Game.class);
@@ -54,7 +54,7 @@ public class TennisSetTest {
     }
 
     @Test
-    public void testStartNewGame() {
+    public void startNewGameWithDefaultValues() {
         TennisSet tennisSet = scoreBoard.getCurrentSet();
         Game currentGame = tennisSet.getCurrentGame();
         tennisSet.startNewGame();
@@ -67,7 +67,7 @@ public class TennisSetTest {
     }
 
     @Test
-    public void testGetGameById() {
+    public void getGameByIdEqualsToCurrentGame() {
         TennisSet tennisSet = scoreBoard.getCurrentSet();
         Game currentGame = tennisSet.getCurrentGame();
         Game gameById = tennisSet.getGameById(0);
@@ -81,7 +81,7 @@ public class TennisSetTest {
     }
 
     @Test
-    public void player1Scores_4_2SetScore_4_2() {
+    public void player1WonGamesEqualsTo4Against2ForPlayer2() {
         TennisSet tennisSet = scoreBoard.getCurrentSet();
         IntStream.rangeClosed(1, 2).forEach(x -> tennisSet.player1WinsCurrentGame());
         IntStream.rangeClosed(1, 2).forEach(x -> tennisSet.player2WinsCurrentGame());

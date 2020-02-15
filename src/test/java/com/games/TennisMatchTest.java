@@ -237,7 +237,7 @@ public class TennisMatchTest {
     }
 
     @Test
-    public void MatchFinishedPlayer2Wins() {
+    public void matchFinishedPlayer2Wins() {
         //expected: the number of won sets per player.
         simulateTwoSets_Score_X_Set_Per_Player(1);
         simulateTwoSets_Score_X_Set_Per_Player(2);
