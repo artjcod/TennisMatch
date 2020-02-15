@@ -28,9 +28,14 @@
    13. The Tie-Break ends as soon as a player gets a least 7 points and 2 points more than his opponent.
    14. The player who wins the Tie-Break wins the Set.
    
+   The outcome of this implementation is a tennis score table as below :
+                   
+                 Player Name      Set 1  Set 2  Set 3  Set 4  Set 5
+                 Serena Williams  6      6(8)   6(6)   5      0
+                 Ones Jabeur      3      6(6)   6(8)   7      6
+   
 
 👉For more information see [Tennis scoring system](https://en.wikipedia.org/wiki/Tennis_scoring_system)
-
 
 
 ### Authors 📚
@@ -71,6 +76,11 @@ To get the html report check the folder target/site once you have run the follow
 ```
 mvn clean test site
 ```
+
+### Logging
+
+The application is using Log4j2 , a pre-configured log4j-configuration file is being used don't hesitate to customize.
+
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
