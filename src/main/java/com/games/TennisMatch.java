@@ -52,18 +52,14 @@ public class TennisMatch implements FinishedListener {
             if (getLeader().equals(player1Name)) {
                 builder.append(player1Name).append(" defeated ");
                 builder.append(player2Name);
-                builder.append(" ");
-                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getCurrentSetScoreByLeader)
-                        .collect(Collectors.joining(","));
-                builder.append(score);
             } else {
                 builder.append(player2Name).append(" defeated ");
                 builder.append(player1Name);
-                builder.append(" ");
-                String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getCurrentSetScoreByLeader)
-                        .collect(Collectors.joining(","));
-                builder.append(score);
             }
+            builder.append(" ");
+            String score = scoreBoard.getPreviousSets().stream().map(TennisSet::getCurrentSetScoreByLeader)
+                    .collect(Collectors.joining(","));
+            builder.append(score);
             return builder.toString();
         }
         return getLiveScore();
