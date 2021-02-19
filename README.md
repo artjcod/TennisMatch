@@ -44,7 +44,7 @@
 
 ### Prerequisites 
 
-To build you will need Git,JDK 8 and Maven 3.3.1 or newer. Be sure that your JAVA_HOME environment variable points to the jdk1.8.0 folder extracted from the JDK download.
+To build you will need Git,JDK 11 and Maven 3.3.1 or newer. Be sure that your JAVA_HOME environment variable points to the jdk1.8.0 folder extracted from the JDK download.
 
 ### Get the Source Code
 
