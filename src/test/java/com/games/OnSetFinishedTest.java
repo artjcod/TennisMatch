@@ -1,9 +1,11 @@
 package com.games;
 
-import org.junit.Before;
-import org.junit.Test;
+
 
 import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,7 +15,7 @@ public class OnSetFinishedTest {
 	private TennisSet currentSet;
 	private String player1Name, player2Name;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		player1Name = "Serena Williams";
 		player2Name = "Ones Jabeur";
@@ -173,12 +175,6 @@ public class OnSetFinishedTest {
 		assertThat(scoreBoard.getPlayer1WonSets()).isEqualTo(2);
 		assertThat(scoreBoard.getPlayer2WonSets()).isEqualTo(0);
 
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void throwIllegalArgumentExceptionWhenInvalidObject() {
-		OnSetFinished listener = new OnSetFinished();
-		listener.update(new Game(player1Name, player2Name,null), null);
 	}
 
 }

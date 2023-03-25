@@ -6,7 +6,9 @@ import lombok.ToString;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.Flow.Subscriber;
 
 /**
  * This class is observed by the listener OnSetFinished in order to notify the Score board for
@@ -22,9 +24,11 @@ import java.util.Observable;
 @EqualsAndHashCode(exclude = {"relatedGames", "currentGame", "relatedScoreBoard"}, callSuper = false)
 @ToString(exclude = {"relatedGames", "currentGame", "relatedScoreBoard"})
 @Data
-public class TennisSet extends Observable {
+public class TennisSet   {
 
     private List<Game> relatedGames = new LinkedList<>();
+
+    SubmissionPublisher<TennisSet> publisher = new SubmissionPublisher<>(Runnable::run, Flow.defaultBufferSize());
 
     private Game currentGame;
 
@@ -45,7 +49,6 @@ public class TennisSet extends Observable {
         this.currentGame = new Game(players[0], players[1], this);
         this.relatedGames.add(currentGame);
         this.relatedScoreBoard = relatedScoreBoard;
-        this.addObserver(new OnSetFinished());
     }
 
     public List<Game> getRelatedGames() {
@@ -179,7 +182,8 @@ public class TennisSet extends Observable {
     }
 
     public void closeSet() {
-        setChanged();
-        notifyObservers();
+        Subscriber<TennisSet> listener=new OnSetFinished();
+        publisher.subscribe(listener);
+        publisher.submit(this);
     }
 }

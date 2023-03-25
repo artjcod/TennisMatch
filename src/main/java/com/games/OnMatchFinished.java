@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * @see com.games.FinishedListener
  */
 
-public class OnSetFinished implements Subscriber<TennisSet> {
+public class OnMatchFinished implements Subscriber<TennisMatch> {
 
 	private Subscription subscription;
 	private Logger logger=LogManager.getLogger(OnSetFinished.class);
@@ -31,9 +31,9 @@ public Subscription getSubscription() {
 	}
 
 	@Override
-	public void onNext(TennisSet tennisSet) {
-			ScoreBoard relatedScoreBoard = tennisSet.getRelatedScoreBoard();
-			relatedScoreBoard.closeCurrentSet();
+	public void onNext(TennisMatch tennisMatch) {
+        tennisMatch.setFinished(true); 
+        tennisMatch.generateMatchReport();
 	}
 
 	@Override

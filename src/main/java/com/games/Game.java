@@ -3,7 +3,9 @@ package com.games;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Observable;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.Flow.Subscriber;
 
 /**
  * This class represents a tennis game (points) .
@@ -16,7 +18,7 @@ import java.util.Observable;
 
 @EqualsAndHashCode(exclude = {"relatedSet"}, callSuper = false)
 @Data
-public class Game extends Observable {
+public class Game {
 
     private TennisSet relatedSet;
     private String player1Name;
@@ -25,11 +27,12 @@ public class Game extends Observable {
     private int player1Points = 0;
     private int player2Points = 0;
 
+    SubmissionPublisher<Game> publisher = new SubmissionPublisher<>(Runnable::run, Flow.defaultBufferSize());
+
     public Game(String player1Name, String player2Name, TennisSet relatedSet) {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
         this.relatedSet = relatedSet;
-        this.addObserver(new OnGameFinished());
     }
 
     public void player1Scores() {
@@ -116,7 +119,10 @@ public class Game extends Observable {
     }
 
     public void finishTheGame() {
-        setChanged();
-        notifyObservers();
+        Subscriber<Game> listener=new OnGameFinished();
+        publisher.subscribe(listener);
+        publisher.submit(this);
+        publisher.close();
+
     }
 }

@@ -1,19 +1,19 @@
 package com.games;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TennisMatchTest {
 
     private TennisMatch match;
     private String player1Name, player2Name;
 
-    @Before
+    @BeforeEach
     public void before() {
         player1Name = "Serena Williams";
         player2Name = "Ones Jabeur";
@@ -238,7 +238,7 @@ public class TennisMatchTest {
 
     @Test
     public void matchFinishedPlayer2Wins() {
-        //expected: the number of won sets per player.
+        // expected: the number of won sets per player.
         simulateTwoSets_Score_X_Set_Per_Player(1);
         simulateTwoSets_Score_X_Set_Per_Player(2);
         assertThat(match.isFinished()).isFalse();
@@ -249,7 +249,8 @@ public class TennisMatchTest {
         assertThat(match.isFinished()).isTrue();
 
         assertThat(match.getLeader()).isEqualTo(player2Name);
-        assertThat(match.getFinalScore()).isEqualTo("Ones Jabeur defeated Serena Williams 6-0,6-6(7-9),6-0,6-6(7-9),6-0");
+        assertThat(match.getFinalScore())
+                .isEqualTo("Ones Jabeur defeated Serena Williams 6-0,6-6(7-9),6-0,6-6(7-9),6-0");
 
     }
 
@@ -306,17 +307,12 @@ public class TennisMatchTest {
         assertThat(set2.isFinishedSet()).isTrue();
         assertThat(match.isFinished()).isFalse();
         assertThat(set2.getTieBreakScore()).isEqualTo("6-6(9-7)");
-        //When the match is not finished ,
+        // When the match is not finished ,
         // the system will always initiate a new set once the current is finished.
         assertThat(match.getScoreBoard().getPreviousSets()).hasSize(expected * 2);
         // End of the 2nd Set
         assertThat(match.getLiveScore())
                 .isEqualTo("Serena Williams:" + expected + " Sets,Ones Jabeur:" + expected + " Sets");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void IllegalArgumentExceptionWhenInvalidObject() {
-        match.update(match.getScoreBoard().getCurrentSet(), null);
     }
 
     @Test
@@ -348,7 +344,7 @@ public class TennisMatchTest {
             assertThat(currentGame.isDeuce()).isFalse();
             assertThat(currentGame.getPlayer1Points()).isEqualTo(currentGame.getPlayer2Points());
             match.player1Scores();
-            match.player2Scores(); //DEUCE
+            match.player2Scores(); // DEUCE
             assertThat(currentGame.isDeuce()).isTrue();
             assertThat(currentGame.getGameScore()).isEqualTo("DEUCE");
             match.player1Scores(); // ADV for player1
@@ -364,8 +360,7 @@ public class TennisMatchTest {
         assertThat(set1.getCurrentSetScoreByLeader()).isEqualTo("6-3");
         assertThat(set1.isTieBreakActive()).isFalse();
         assertThat(set1.getSetWinner()).isEqualTo(player1Name);
-        //END SET 1
-
+        // END SET 1
 
         // Set2 Player1 : WonGames = 6 , Player2 WonGames = 6 , Tie-Break 8-6
         TennisSet set2 = match.getScoreBoard().getCurrentSet();
@@ -448,7 +443,8 @@ public class TennisMatchTest {
         assertThat(match.isFinished()).isTrue();
         assertThat(match.getLiveScore()).isEqualTo("Serena Williams:3 Sets,Ones Jabeur:2 Sets");
         assertThat(match.getLeader()).isEqualTo(player1Name);
-        assertThat(match.getFinalScore()).isEqualTo("Serena Williams defeated Ones Jabeur 6-3,6-6(8-6),6-6(6-8),5-7,6-0");
+        assertThat(match.getFinalScore())
+                .isEqualTo("Serena Williams defeated Ones Jabeur 6-3,6-6(8-6),6-6(6-8),5-7,6-0");
 
     }
 
@@ -481,7 +477,7 @@ public class TennisMatchTest {
             assertThat(currentGame.isDeuce()).isFalse();
             assertThat(currentGame.getPlayer1Points()).isEqualTo(currentGame.getPlayer2Points());
             match.player1Scores();
-            match.player2Scores(); //DEUCE
+            match.player2Scores(); // DEUCE
             assertThat(currentGame.isDeuce()).isTrue();
             assertThat(currentGame.getGameScore()).isEqualTo("DEUCE");
             match.player1Scores(); // ADV for player1
@@ -497,8 +493,7 @@ public class TennisMatchTest {
         assertThat(set1.getCurrentSetScoreByLeader()).isEqualTo("6-3");
         assertThat(set1.isTieBreakActive()).isFalse();
         assertThat(set1.getSetWinner()).isEqualTo(player1Name);
-        //END SET 1
-
+        // END SET 1
 
         // Set2 Player1 : WonGames = 6 , Player2 WonGames = 6 , Tie-Break 8-6
         TennisSet set2 = match.getScoreBoard().getCurrentSet();
@@ -581,19 +576,27 @@ public class TennisMatchTest {
         assertThat(match.isFinished()).isTrue();
         assertThat(match.getLiveScore()).isEqualTo("Serena Williams:2 Sets,Ones Jabeur:3 Sets");
         assertThat(match.getLeader()).isEqualTo(player2Name);
-        assertThat(match.getFinalScore()).isEqualTo("Ones Jabeur defeated Serena Williams 3-6,6-6(6-8),6-6(8-6),7-5,6-0");
+        assertThat(match.getFinalScore())
+                .isEqualTo("Ones Jabeur defeated Serena Williams 3-6,6-6(6-8),6-6(8-6),7-5,6-0");
 
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void scoresWhereasTheMatchIsFinishedPlayer1(){
-        match.setFinished(true);
-        match.player1Scores();
+    @Test
+    public void scoresWhereasTheMatchIsFinishedPlayer1() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+
+            match.setFinished(true);
+            match.player1Scores();
+        });
     }
-    @Test(expected = IllegalStateException.class)
-    public void scoresWhereasTheMatchIsFinishedPlayer2(){
-        match.setFinished(true);
-        match.player2Scores();
+
+    @Test
+    public void scoresWhereasTheMatchIsFinishedPlayer2() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+
+            match.setFinished(true);
+            match.player2Scores();
+        });
     }
 
 }
