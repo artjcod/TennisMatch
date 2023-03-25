@@ -1,9 +1,11 @@
 package com.games;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -11,13 +13,13 @@ import static org.mockito.Mockito.*;
 import java.util.stream.IntStream;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TennisSetTest {
 
     private ScoreBoard scoreBoard;
     private String player1Name, player2Name;
 
-    @Before
+    @BeforeEach
     public void before() {
         player1Name = "Serena Williams";
         player2Name = "Ones Jabeur";
@@ -37,9 +39,14 @@ public class TennisSetTest {
         assertThat(tennisSet.getTieBreakScore()).isEqualTo("Tie-Break is not active !");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+ 
+      
+    @Test
     public void testGameWith1PlayerIllegalArgumentException() {
-        new TennisSet(scoreBoard, "Player1");
+            Assertions.assertThrows(IllegalArgumentException.class, ()->{
+            new TennisSet(scoreBoard, "Player1");
+        });
+       
     }
 
     @Test
@@ -50,7 +57,6 @@ public class TennisSetTest {
         assertThat(tennisSet.getRelatedGames()).contains(tennisSet.getCurrentGame());
         assertThat(tennisSet.getCurrentGame().getPlayer1Name()).isEqualTo(player1Name);
         assertThat(tennisSet.getCurrentGame().getPlayer2Name()).isEqualTo(player2Name);
-        assertThat(tennisSet.countObservers()).isEqualTo(1);
     }
 
     @Test

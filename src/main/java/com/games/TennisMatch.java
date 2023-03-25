@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @EqualsAndHashCode(exclude = {"scoreBoard"}, callSuper = false)
 @ToString(exclude = {"scoreBoard"})
 @Data
-public class TennisMatch implements FinishedListener {
+public class TennisMatch  {
     private static final Logger logger = LogManager.getLogger(TennisMatch.class);
 
     private ScoreBoard scoreBoard;
@@ -35,7 +35,7 @@ public class TennisMatch implements FinishedListener {
         this.player1Name = player1Name;
         this.player2Name = player2Name;
         this.scoreBoard = new ScoreBoard(player1Name, player2Name);
-        this.scoreBoard.addObserver(this);
+        this.scoreBoard.setTennisMatch(this);
     }
 
     public boolean isFinished() {
@@ -89,17 +89,8 @@ public class TennisMatch implements FinishedListener {
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof ScoreBoard) {
-            this.finished = true;
-            generateMatchReport(scoreBoard);
-        } else {
-            throw new IllegalArgumentException("Invalid object type received!");
-        }
-    }
 
-    public void generateMatchReport(ScoreBoard scoreBoard) {
+    public void generateMatchReport() {
         List<TennisSet> matchSets = scoreBoard.getPreviousSets();
         List<List<String>> rows = new ArrayList<>();
         List<String> headers = Stream.of("Player Name").collect(Collectors.toList());

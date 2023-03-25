@@ -1,11 +1,13 @@
 package com.games;
 
-import org.junit.Before;
-import org.junit.Test;
+
 
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ScoreBoardTest {
 
@@ -13,7 +15,7 @@ public class ScoreBoardTest {
 	private TennisMatch match;
 	private String player1Name, player2Name;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		player1Name = "Serena Williams";
 		player2Name = "Ones Jabeur";

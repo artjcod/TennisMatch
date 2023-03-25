@@ -6,7 +6,9 @@ import lombok.ToString;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
+import java.util.concurrent.Flow;
+import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.Flow.Subscriber;
 
 
 /**
@@ -18,10 +20,12 @@ import java.util.Observable;
 @EqualsAndHashCode(exclude = {"currentSet","previousSets"}, callSuper = false)
 @ToString(exclude = {"currentSet","previousSets"})
 @Data
-public class ScoreBoard extends Observable {
+public class ScoreBoard  {
 
 	private TennisSet currentSet;
+	private TennisMatch tennisMatch;
 	private List<TennisSet> previousSets = new LinkedList<>();
+	SubmissionPublisher<TennisMatch> publisher = new SubmissionPublisher<>(Runnable::run, Flow.defaultBufferSize());
 	private String player1Name;
 	private String player2Name;
 
@@ -58,15 +62,17 @@ public class ScoreBoard extends Observable {
 	public void player1WinsCurrentSet() {
 		player1WonSets++;
 		if(player1WonSets == 3) {
-			setChanged();
-			notifyObservers();
-		}
+			Subscriber<TennisMatch> listener=new OnMatchFinished();
+			publisher.subscribe(listener);
+			publisher.submit(tennisMatch);
+		};
 	}
 	public void player2WinsCurrentSet() {
 		player2WonSets++;
 		if(player2WonSets == 3) {
-			setChanged();
-			notifyObservers();
+			Subscriber<TennisMatch> event=new OnMatchFinished();
+			publisher.subscribe(event);
+			publisher.submit(tennisMatch);
 		}
 	}
 

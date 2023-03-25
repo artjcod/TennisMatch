@@ -1,9 +1,12 @@
 package com.games;
 
-import org.junit.Before;
-import org.junit.Test;
 
-import static junit.framework.TestCase.*;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class OnGameFinishedTest {
 
@@ -11,7 +14,7 @@ public class OnGameFinishedTest {
     private String player1Name;
     private String player2Name;
 
-    @Before
+    @BeforeEach
     public void before() {
         player1Name = "Serena Williams";
         player2Name = "Ones Jabeur";
@@ -68,9 +71,5 @@ public class OnGameFinishedTest {
         assertEquals(currentSet.getPlayer2WonGames(), 2);
     }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void throwIllegalArgumentExceptionWhenInvalidObject() {
-		OnGameFinished listener = new OnGameFinished();
-		listener.update(currentSet, null);
-	}
+
 }
