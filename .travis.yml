@@ -7,7 +7,7 @@ addons:
   sonarcloud:
     organization: "artjcod"
     token:
-      secure: "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"
+      secure: ""
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
